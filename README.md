@@ -26,6 +26,9 @@ npx prisma migrate dev
 
 # Générer le client Prisma
 npx prisma generate
+
+# Reset la base de données (supprime toutes les données + migrations)
+npx prisma migrate reset --force
 ```
 
 ## Variables d'environnement

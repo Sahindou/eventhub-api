@@ -42,6 +42,8 @@ model User {
   role          String
   profile_image String?
   is_verified   Boolean     @default(false)
+  otp_secret    String
+  otp_enable    Int         @default(0)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
 
