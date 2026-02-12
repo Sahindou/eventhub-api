@@ -5,6 +5,7 @@ import swaggerUi from "swagger-ui-express";
 import { routers } from "./routes";
 import { errorHandlerMiddleware, jsonApiResponseMiddleware } from "./middlewares";
 import swaggerOptions from "./config/swagger.config";
+import cors from "cors"
 
 const app = express();
 
@@ -14,6 +15,8 @@ const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(jsonApiResponseMiddleware);
+app.use(cors())
+
 
 // Swagger UI
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
