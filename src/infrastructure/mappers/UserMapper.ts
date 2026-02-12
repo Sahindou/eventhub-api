@@ -16,6 +16,8 @@ export class UserMapper {
       role: prismaUser.role,
       profile_image: prismaUser.profile_image,
       is_verified: prismaUser.is_verified,
+      otp_secret: prismaUser.otp_secret,
+      otp_enable: prismaUser.otp_enable,
       createdAt: prismaUser.createdAt,
       updatedAt: prismaUser.updatedAt,
     });
@@ -36,6 +38,8 @@ export class UserMapper {
       role: props.role,
       profile_image: props.profile_image,
       is_verified: props.is_verified,
+      otp_secret: props.otp_secret,
+      otp_enable: props.otp_enable,
       createdAt: props.createdAt,
       updatedAt: props.updatedAt,
     };

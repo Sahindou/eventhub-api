@@ -8,6 +8,8 @@ export interface UserProps {
   role:          string
   profile_image: string | null
   is_verified:   boolean
+  otp_secret:    string
+  otp_enable:    number
   createdAt:     Date
   updatedAt:     Date
 }

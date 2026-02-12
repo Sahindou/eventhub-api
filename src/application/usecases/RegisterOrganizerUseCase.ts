@@ -55,6 +55,8 @@ export class RegisterOrganizerUseCase {
       role: 'organizer',
       profile_image: dto.profile_image ?? null,
       is_verified: false,
+      otp_secret: '',
+      otp_enable: 0,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
