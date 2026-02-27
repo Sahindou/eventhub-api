@@ -2,11 +2,13 @@ import { Router } from "express";
 import { OrganizerController } from '@/api/controllers/';
 import { RegisterOrganizerUseCase } from '@/application/usecases/RegisterOrganizerUseCase';
 import { LoginOrganizerUseCase } from '@/application/usecases/LoginOrganizerUseCase';
+import { GetOrganizerUseCase } from '@/application/usecases/GetOrganizerUseCase';
 import { UserRepositoryDatabase } from '@/infrastructure/repositories/UserRepositoryDatabase';
 import { OrganizerRepositoryDatabase } from '@/infrastructure/repositories/OrganizerRepositoryDatabase';
 import { UuidGenerator } from '@/infrastructure/id-generators/UuidGenerator';
 import { BcryptPasswordHasher } from '@/infrastructure/services/BcryptPasswordHasher';
 import { JwtTokenGenerator } from '@/infrastructure/services/JwtTokenGenerator';
+import { authMiddleware } from '@/api/middlewares/authentication.middleware';
 
 const router = Router();
 
@@ -31,10 +33,13 @@ const loginOrganizerUseCase = new LoginOrganizerUseCase(
   tokenGenerator
 );
 
+const getOrganizerUseCase = new GetOrganizerUseCase(userRepository);
+
 // 3. Créer le Controller
 const organizerController = new OrganizerController(
   registerOrganizerUseCase,
-  loginOrganizerUseCase
+  loginOrganizerUseCase,
+  getOrganizerUseCase
 );
 
 // ===== DÉFINIR LES ROUTES =====
@@ -44,5 +49,9 @@ router.post('/register', organizerController.register.bind(organizerController))
 
 // POST /api/organizers/login - Connecter un organisateur
 router.post('/login', organizerController.login.bind(organizerController));
+
+// GET /api/organizers/me - récupérer les infos de l'utilisateur connecté
+router.get('/me', authMiddleware, organizerController.getMe.bind(organizerController));
+
 
 export { router as OrganizerRouter };

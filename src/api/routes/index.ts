@@ -3,6 +3,7 @@ import { EventRouter } from "./event.route"
 import { OrganizerRouter } from "./organizer.route"
 import { a2fRouter } from "./a2f.routes";
 
+
 const router = Router()
 
 router.use("/api/events", EventRouter)

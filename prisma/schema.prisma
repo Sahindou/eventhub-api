@@ -47,9 +47,23 @@ model User {
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
 
-  // Relation inverse (un User peut avoir un Organizer)
+  // Relation inverse (ex: un User peut avoir un Organizer)
   organizer     Organizer?
+  a2f_backup_codes A2f_backup_codes?
 }
+
+model A2f_backup_codes {
+  id            String      @id @default(uuid())
+  user_id       String      @unique
+  recovery_code String[]    // à hasher avant insertion
+  nb_code_used  Int         @default(0)
+  nb_consecutive_tests Int  @default(0)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  user  User  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
 
 model Organizer {
   id            String      @id @default(uuid()) 

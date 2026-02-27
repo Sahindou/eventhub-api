@@ -1,11 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import { RegisterOrganizerUseCase } from '@/application/usecases/RegisterOrganizerUseCase';
 import { LoginOrganizerUseCase } from '@/application/usecases/LoginOrganizerUseCase';
+import { GetOrganizerUseCase } from '@/application/usecases/GetOrganizerUseCase';
 
 export class OrganizerController {
   constructor(
     private readonly registerOrganizerUseCase: RegisterOrganizerUseCase,
-    private readonly loginOrganizerUseCase: LoginOrganizerUseCase
+    private readonly loginOrganizerUseCase: LoginOrganizerUseCase,
+    private readonly getOrganizerUseCase: GetOrganizerUseCase
   ) {}
 
   // POST /api/organizers/register
@@ -32,6 +34,16 @@ export class OrganizerController {
         organizerId: result.organizerId,
       }, 201)
 
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // GET /api/organizers/me
+  async getMe(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await this.getOrganizerUseCase.executeById({ id: req.user!.userId });
+      res.jsonSuccess(result);
     } catch (error) {
       next(error);
     }

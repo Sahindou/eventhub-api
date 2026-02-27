@@ -53,5 +53,10 @@ export class User {
     verify(): void {
         this.props.is_verified = true;
     }
-   
+
+    enableOtp(secret: string): void {
+        this.props.otp_secret = secret;
+        this.props.otp_enable = 1;
+    }
+
 }
