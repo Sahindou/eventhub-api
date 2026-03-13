@@ -1,5 +1,6 @@
 import "dotenv/config";
 import express from "express";
+import mongoose from "mongoose";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import { routers } from "./routes";
@@ -10,6 +11,13 @@ import cookieParser from "cookie-parser";
 import { env } from "./config/env";
 
 const app = express();
+
+// ── Connexion MongoDB (Analytics) ──────────────────────────────────────────
+mongoose
+  .connect(process.env.MONGODB_URI as string)
+  .then(() => console.log("✅ MongoDB connected (analytics)"))
+  .catch((err) => console.error("❌ MongoDB connection error:", err));
+// ───────────────────────────────────────────────────────────────────────────
 
 // Swagger setup
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
