@@ -6,13 +6,20 @@ import { routers } from "./routes";
 import { errorHandlerMiddleware, jsonApiResponseMiddleware } from "./middlewares";
 import swaggerOptions from "./config/swagger.config";
 import cors from "cors"
+import cookieParser from "cookie-parser";
+import { env } from "./config/env";
 
 const app = express();
 
 // Swagger setup
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
-app.use(cors());
+// autorisation des credentials 
+app.use(cors({
+    origin: env.ORIGIN || "http://localhost:5173",
+    credentials: true 
+}));
+app.use(cookieParser())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(jsonApiResponseMiddleware);
