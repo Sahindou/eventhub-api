@@ -2,12 +2,14 @@ import { Router } from "express";
 import { EventRouter } from "./event.route"
 import { OrganizerRouter } from "./organizer.route"
 import { a2fRouter } from "./a2f.routes";
+import { StatsRouter } from "./stats.route";
 
 
 const router = Router()
 
 router.use("/api/events", EventRouter)
 router.use("/api/organizers", OrganizerRouter)
+router.use("/api/stats", StatsRouter)
 
 // route de la A2F
 router.use("/api/a2f", a2fRouter)

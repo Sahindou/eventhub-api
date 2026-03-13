@@ -15,11 +15,14 @@ const idGenerator = new UuidGenerator();
 const createEventUseCase = new CreateEventUseCase(eventRepository, idGenerator);
 
 // 3. Créer le Controller
-const eventController = new EventController(createEventUseCase);
+const eventController = new EventController(createEventUseCase, eventRepository);
 
 // ===== DÉFINIR LES ROUTES =====
 
+// GET /api/events - lister tous les événements (protégé)
+router.get("/", authMiddleware, eventController.getAll.bind(eventController))
 // POST /api/events - Créer un événement (protégé: organizer uniquement)
-router.post('/', authMiddleware, requireRole('organizer'), eventController.create.bind(eventController));
+router.post('/', authMiddleware, requireRole('organizer'), 
+eventController.create.bind(eventController));
 
 export { router as EventRouter }

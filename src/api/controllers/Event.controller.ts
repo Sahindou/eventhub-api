@@ -2,11 +2,12 @@
 
 import { Request, Response, NextFunction } from 'express';
 import { CreateEventUseCase } from '@/application/usecases/CreateEventUseCase';
+import { EventRepositoryDatabase } from '@/infrastructure/repositories';
 
 export class EventController {
   constructor(
-    private readonly createEventUseCase: CreateEventUseCase
-    // Plus tard, normalement il aura les usecase
+    private readonly createEventUseCase: CreateEventUseCase,
+    private readonly eventRepository: EventRepositoryDatabase
   ) {}
 
   // POST /api/events
@@ -29,14 +30,21 @@ export class EventController {
       // 2. Exécuter le Use Case
       const eventId = await this.createEventUseCase.execute(dto);
 
-      
-
       // 3. Retourner la réponse
       res.jsonSuccess({id: eventId}, 201)
       
     } catch (error) {
       // 4. Déléguer la gestion d'erreur au middleware
       next(error);
+    }
+  }
+
+  async getAll(req: Request, res: Response, next: NextFunction) {
+    try {
+      const events = await this.eventRepository.findAll()
+      res.jsonSuccess(events)
+    } catch (error) {
+      next(error)
     }
   }
 }
