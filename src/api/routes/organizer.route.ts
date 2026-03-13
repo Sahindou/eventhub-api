@@ -50,6 +50,9 @@ router.post('/register', organizerController.register.bind(organizerController))
 // POST /api/organizers/login - Connecter un organisateur
 router.post('/login', organizerController.login.bind(organizerController));
 
+// POST /api/organizers/logout - Déconnecter (supprime le cookie)
+router.post('/logout', organizerController.logout.bind(organizerController));
+
 // GET /api/organizers/me - récupérer les infos de l'utilisateur connecté
 router.get('/me', authMiddleware, organizerController.getMe.bind(organizerController));
 

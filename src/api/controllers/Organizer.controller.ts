@@ -40,6 +40,20 @@ export class OrganizerController {
     }
   }
 
+  // POST /api/organizers/logout
+  async logout(_req: Request, res: Response, next: NextFunction) {
+    try {
+      res.clearCookie("token", {
+        httpOnly: true,
+        secure: env.NODE_ENV === "production",
+        sameSite: "strict",
+      });
+      res.jsonSuccess({ message: "Déconnexion réussie" });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   // GET /api/organizers/me
   async getMe(req: Request, res: Response, next: NextFunction) {
     try {
