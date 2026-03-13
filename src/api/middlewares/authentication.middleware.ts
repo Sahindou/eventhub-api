@@ -16,9 +16,9 @@ const tokenGenerator = new JwtTokenGenerator(process.env.JWT_SECRET || 'your-sec
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
   try {
     // 1. Récupérer le token du header Authorization
-    const authHeader = req.headers.authorization;
+    const token = req.cookies?.token;
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (!token) {
       res.status(401).json({
         success: false,
         message: 'Access denied: No token provided',
@@ -26,10 +26,8 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
       return;
     }
 
-    // 2. Extraire le token (enlever "Bearer ")
-    const token = authHeader.substring(7);
-
-    // 3. Vérifier le token
+    
+    // 2. Vérifier le token
     const payload = tokenGenerator.verify(token);
 
     if (!payload) {
@@ -40,7 +38,7 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
       return;
     }
 
-    // 4. Ajouter les infos utilisateur à la requête
+    // 3. Ajouter les infos utilisateur à la requête
     req.user = payload;
 
     next();

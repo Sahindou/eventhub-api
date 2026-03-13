@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { RegisterOrganizerUseCase } from '@/application/usecases/RegisterOrganizerUseCase';
 import { LoginOrganizerUseCase } from '@/application/usecases/LoginOrganizerUseCase';
 import { GetOrganizerUseCase } from '@/application/usecases/GetOrganizerUseCase';
+import { env } from '../config/env';
 
 export class OrganizerController {
   constructor(
@@ -59,8 +60,15 @@ export class OrganizerController {
 
       const result = await this.loginOrganizerUseCase.execute(dto);
 
+      // envoie du token dans les cookies
+      res.cookie("token", result.token, {
+        httpOnly: true,
+        secure: env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 86400000 // 24h en ms
+      })
+
       res.jsonSuccess({
-        token: result.token,
         user: result.user,
       });
 
