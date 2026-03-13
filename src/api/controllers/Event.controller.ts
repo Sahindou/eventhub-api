@@ -1,13 +1,13 @@
 // src/api/controllers/EventController.ts
 
-import { Request, Response, NextFunction } from 'express';
-import { CreateEventUseCase } from '@/application/usecases/CreateEventUseCase';
-import { EventRepositoryDatabase } from '@/infrastructure/repositories';
+import { Request, Response, NextFunction } from "express";
+import { CreateEventUseCase } from "@/application/usecases/CreateEventUseCase";
+import { EventRepositoryDatabase } from "@/infrastructure/repositories";
 
 export class EventController {
   constructor(
     private readonly createEventUseCase: CreateEventUseCase,
-    private readonly eventRepository: EventRepositoryDatabase
+    private readonly eventRepository: EventRepositoryDatabase,
   ) {}
 
   // POST /api/events
@@ -31,8 +31,7 @@ export class EventController {
       const eventId = await this.createEventUseCase.execute(dto);
 
       // 3. Retourner la réponse
-      res.jsonSuccess({id: eventId}, 201)
-      
+      res.jsonSuccess({ id: eventId }, 201);
     } catch (error) {
       // 4. Déléguer la gestion d'erreur au middleware
       next(error);
@@ -41,10 +40,27 @@ export class EventController {
 
   async getAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const events = await this.eventRepository.findAll()
-      res.jsonSuccess(events)
+      const page = Math.max(1, parseInt(req.query.page as string) || 1);
+      const limit = Math.min(
+        100,
+        Math.max(1, parseInt(req.query.limit as string) || 10),
+      );
+
+      const { events, total } = await this.eventRepository.findAllPaginated(
+        page,
+        limit,
+      );
+
+      const totalPages = Math.ceil(total / limit);
+
+      res.jsonSuccess({
+        data: events,
+        total,
+        page,
+        totalPages,
+      });
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 }

@@ -14,5 +14,6 @@ export interface EventRepositoryInterface {
     findByOrganizerId(organizerId: string): Promise<Event[]>
     findByCategoryId(categoryId: string): Promise<Event[] >
     findByDate(date: Date): Promise<Event[]>
+    findAllPaginated(page: number, limit: number): Promise<{ events: Event[]; total: number }>
 
 }

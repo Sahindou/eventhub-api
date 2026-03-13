@@ -51,4 +51,10 @@ export class InMemoryEventRepository implements EventRepositoryInterface {
   async findByDate(date: Date): Promise<Event[]> {
     return this.events.filter((event) => event.getStartDate().getTime() === date.getTime());
   }
+
+  async findAllPaginated(page: number, limit: number): Promise<{ events: Event[]; total: number }> {
+    const skip = (page - 1) * limit;
+    const events = this.events.slice(skip, skip + limit);
+    return { events, total: this.events.length };
+  }
 }

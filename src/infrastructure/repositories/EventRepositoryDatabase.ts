@@ -107,4 +107,27 @@ export class EventRepositoryDatabase implements EventRepositoryInterface {
       throw new Error(`Failed to find events by date: ${error.message}`);
     }
   }
+
+  async findAllPaginated(page: number, limit: number): Promise<{ events: Event[]; total: number }> {
+  try {
+    const skip = (page - 1) * limit;   // offset-based: page 1 → skip 0, page 2 → skip 10
+
+    const [prismaEvents, total] = await Promise.all([
+      prisma.event.findMany({
+        skip,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+      }),
+      prisma.event.count(),
+    ]);
+
+    return {
+      events: prismaEvents.map(EventMapper.toDomain),
+      total,
+    };
+  } catch (error: any) {
+    throw new Error(`Failed to fetch paginated events: ${error.message}`);
+  }
+}
+
 }
